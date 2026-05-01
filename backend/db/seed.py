@@ -132,9 +132,7 @@ def seed_database():
     # --- Deals ---
     # (company_name, deal_type, stage, share_qty, price_per_share, total_value,
     #  buyer_id, seller_id, assigned_rep, last_activity_at, rofr_deadline, notes, risk_level)
-    #
-    # NOTE: Deals 4-15 are commented out for fast testing (3-deal sweep).
-    # Uncomment all deals below to restore the full 15-deal pipeline.
+    
     deals = [
         # Deal 1: SpaceX — ROFR deadline in 2 days (ESCALATION)
         (
@@ -160,102 +158,102 @@ def seed_database():
             None,
             "unknown"
         ),
-        # # Deal 4: Canva — healthy, recently active (NO_ACTION)
-        # (
-        #     "Canva", "sell", "negotiation", 1500, 32.00, 48000.00,
-        #     cp["Linda Huang"], cp["Aisha Johnson"], "Maria Santos",
-        #     today - timedelta(days=1), None,
-        #     "Both sides seem engaged, good energy on the call",
-        #     "unknown"
-        # ),
-        # # Deal 5: Anduril — transfer form stuck (INFO_REQUEST)
-        # (
-        #     "Anduril", "buy", "documentation", 4000, 52.00, 208000.00,
-        #     cp["Michael Chen"], cp["David Park"], "Alex Thompson",
-        #     today - timedelta(days=10), None,
-        #     "Waiting on seller for transfer form",
-        #     "unknown"
-        # ),
-        # # Deal 6: Plaid — expired KYC in settlement (COMPLIANCE_FLAG)
-        # (
-        #     "Plaid", "sell", "settlement", 2500, 15.00, 37500.00,
-        #     cp["Priya Mehta"], cp["James Morrison"], "Maria Santos",
-        #     today - timedelta(days=3), None,
-        #     None,
-        #     "unknown"
-        # ),
-        # # Deal 7: Discord — ROFR waiver received (STATUS_UPDATE)
-        # (
-        #     "Discord", "sell", "rofr", 6000, 30.00, 180000.00,
-        #     cp["Fatima Al-Hassan"], cp["Tom Bradley"], "Alex Thompson",
-        #     today - timedelta(days=1), (today + timedelta(days=20)).date(),
-        #     "Got the waiver back from issuer",
-        #     "unknown"
-        # ),
-        # # Deal 8: Klarna — high value, counsel unresponsive (ESCALATION)
-        # (
-        #     "Klarna", "buy", "agreement", 8000, 265.00, 2120000.00,
-        #     cp["Michael Chen"], cp["Rachel Foster"], "Maria Santos",
-        #     today - timedelta(days=8), None,
-        #     "Counsel has been slow on this one",
-        #     "unknown"
-        # ),
-        # # Deal 9: Cerebras — new inquiry, needs outreach (FOLLOW_UP)
-        # (
-        #     "Cerebras", "sell", "inquiry", 1000, 18.00, 18000.00,
-        #     None, cp["Aisha Johnson"], "Alex Thompson",
-        #     today, None,
-        #     "New inbound, seller seems motivated",
-        #     "unknown"
-        # ),
-        # # Deal 10: Figma — international seller, missing W-8BEN (INFO_REQUEST)
-        # (
-        #     "Figma", "buy", "documentation", 3500, 42.00, 147000.00,
-        #     cp["Linda Huang"], cp["Nina Patel"], "Maria Santos",
-        #     today - timedelta(days=7), None,
-        #     "Still waiting on tax docs from seller",
-        #     "unknown"
-        # ),
-        # # Deal 11: Rippling — accredited not submitted (COMPLIANCE_FLAG)
-        # (
-        #     "Rippling", "sell", "negotiation", 2000, 14.00, 28000.00,
-        #     cp["Kevin Okafor"], cp["Carlos Rivera"], "Alex Thompson",
-        #     today - timedelta(days=4), None,
-        #     None,
-        #     "unknown"
-        # ),
-        # # Deal 12: Scale AI — everything on track (NO_ACTION)
-        # (
-        #     "Scale AI", "buy", "settlement", 5000, 72.00, 360000.00,
-        #     cp["Priya Mehta"], cp["David Park"], "Maria Santos",
-        #     today - timedelta(days=2), None,
-        #     "Pretty much all buttoned up, just waiting on TA",
-        #     "unknown"
-        # ),
-        # # Deal 13: Impossible Foods — re-engagement needed (FOLLOW_UP)
-        # (
-        #     "Impossible Foods", "buy", "agreement", 1500, 8.00, 12000.00,
-        #     cp["Marcus Bell"], cp["Rachel Foster"], "Alex Thompson",
-        #     today - timedelta(days=21), None,
-        #     None,
-        #     "unknown"
-        # ),
-        # # Deal 14: Reddit — healthy ROFR in progress (NO_ACTION)
-        # (
-        #     "Reddit", "sell", "rofr", 3000, 55.00, 165000.00,
-        #     cp["Fatima Al-Hassan"], cp["Owen Fitzgerald"], "Maria Santos",
-        #     today - timedelta(days=3), (today + timedelta(days=15)).date(),
-        #     "ROFR submitted, all good so far",
-        #     "unknown"
-        # ),
-        # # Deal 15: Flexport — rejected purchase agreement (ESCALATION + COMPLIANCE_FLAG)
-        # (
-        #     "Flexport", "buy", "documentation", 2500, 19.00, 47500.00,
-        #     cp["Priya Mehta"], cp["Tom Bradley"], "Alex Thompson",
-        #     today - timedelta(days=1), None,
-        #     "PA came back rejected, needs revision",
-        #     "unknown"
-        # ),
+        # Deal 4: Canva — healthy, recently active (NO_ACTION)
+        (
+            "Canva", "sell", "negotiation", 1500, 32.00, 48000.00,
+            cp["Linda Huang"], cp["Aisha Johnson"], "Maria Santos",
+            today - timedelta(days=1), None,
+            "Both sides seem engaged, good energy on the call",
+            "unknown"
+        ),
+        # Deal 5: Anduril — transfer form stuck (INFO_REQUEST)
+        (
+            "Anduril", "buy", "documentation", 4000, 52.00, 208000.00,
+            cp["Michael Chen"], cp["David Park"], "Alex Thompson",
+            today - timedelta(days=10), None,
+            "Waiting on seller for transfer form",
+            "unknown"
+        ),
+        # Deal 6: Plaid — expired KYC in settlement (COMPLIANCE_FLAG)
+        (
+            "Plaid", "sell", "settlement", 2500, 15.00, 37500.00,
+            cp["Priya Mehta"], cp["James Morrison"], "Maria Santos",
+            today - timedelta(days=3), None,
+            None,
+            "unknown"
+        ),
+        # Deal 7: Discord — ROFR waiver received (STATUS_UPDATE)
+        (
+            "Discord", "sell", "rofr", 6000, 30.00, 180000.00,
+            cp["Fatima Al-Hassan"], cp["Tom Bradley"], "Alex Thompson",
+            today - timedelta(days=1), (today + timedelta(days=20)).date(),
+            "Got the waiver back from issuer",
+            "unknown"
+        ),
+        # Deal 8: Klarna — high value, counsel unresponsive (ESCALATION)
+        (
+            "Klarna", "buy", "agreement", 8000, 265.00, 2120000.00,
+            cp["Michael Chen"], cp["Rachel Foster"], "Maria Santos",
+            today - timedelta(days=8), None,
+            "Counsel has been slow on this one",
+            "unknown"
+        ),
+        # Deal 9: Cerebras — new inquiry, needs outreach (FOLLOW_UP)
+        (
+            "Cerebras", "sell", "inquiry", 1000, 18.00, 18000.00,
+            None, cp["Aisha Johnson"], "Alex Thompson",
+            today, None,
+            "New inbound, seller seems motivated",
+            "unknown"
+        ),
+        # Deal 10: Figma — international seller, missing W-8BEN (INFO_REQUEST)
+        (
+            "Figma", "buy", "documentation", 3500, 42.00, 147000.00,
+            cp["Linda Huang"], cp["Nina Patel"], "Maria Santos",
+            today - timedelta(days=7), None,
+            "Still waiting on tax docs from seller",
+            "unknown"
+        ),
+        # Deal 11: Rippling — accredited not submitted (COMPLIANCE_FLAG)
+        (
+            "Rippling", "sell", "negotiation", 2000, 14.00, 28000.00,
+            cp["Kevin Okafor"], cp["Carlos Rivera"], "Alex Thompson",
+            today - timedelta(days=4), None,
+            None,
+            "unknown"
+        ),
+        # Deal 12: Scale AI — everything on track (NO_ACTION)
+        (
+            "Scale AI", "buy", "settlement", 5000, 72.00, 360000.00,
+            cp["Priya Mehta"], cp["David Park"], "Maria Santos",
+            today - timedelta(days=2), None,
+            "Pretty much all buttoned up, just waiting on TA",
+            "unknown"
+        ),
+        # Deal 13: Impossible Foods — re-engagement needed (FOLLOW_UP)
+        (
+            "Impossible Foods", "buy", "agreement", 1500, 8.00, 12000.00,
+            cp["Marcus Bell"], cp["Rachel Foster"], "Alex Thompson",
+            today - timedelta(days=21), None,
+            None,
+            "unknown"
+        ),
+        # Deal 14: Reddit — healthy ROFR in progress (NO_ACTION)
+        (
+            "Reddit", "sell", "rofr", 3000, 55.00, 165000.00,
+            cp["Fatima Al-Hassan"], cp["Owen Fitzgerald"], "Maria Santos",
+            today - timedelta(days=3), (today + timedelta(days=15)).date(),
+            "ROFR submitted, all good so far",
+            "unknown"
+        ),
+        # Deal 15: Flexport — rejected purchase agreement (ESCALATION + COMPLIANCE_FLAG)
+        (
+            "Flexport", "buy", "documentation", 2500, 19.00, 47500.00,
+            cp["Priya Mehta"], cp["Tom Bradley"], "Alex Thompson",
+            today - timedelta(days=1), None,
+            "PA came back rejected, needs revision",
+            "unknown"
+        ),
     ]
 
     cur.executemany("""
@@ -287,74 +285,74 @@ def seed_database():
         (d["Databricks"], "kyc_id", "pending", today - timedelta(days=5), None, None),
         (d["Databricks"], "accredited_proof", "missing", today - timedelta(days=5), None, "Buyer has not submitted any accredited investor documentation"),
 
-        # # Deal 4: Canva — healthy
-        # (d["Canva"], "purchase_agreement", "received", today - timedelta(days=10), today - timedelta(days=8), None),
-        # (d["Canva"], "kyc_id", "received", today - timedelta(days=10), today - timedelta(days=9), None),
-        # (d["Canva"], "accredited_proof", "received", today - timedelta(days=10), today - timedelta(days=7), None),
-        # (d["Canva"], "transfer_form", "received", today - timedelta(days=5), today - timedelta(days=3), None),
+        # Deal 4: Canva — healthy
+        (d["Canva"], "purchase_agreement", "received", today - timedelta(days=10), today - timedelta(days=8), None),
+        (d["Canva"], "kyc_id", "received", today - timedelta(days=10), today - timedelta(days=9), None),
+        (d["Canva"], "accredited_proof", "received", today - timedelta(days=10), today - timedelta(days=7), None),
+        (d["Canva"], "transfer_form", "received", today - timedelta(days=5), today - timedelta(days=3), None),
 
-        # # Deal 5: Anduril — transfer form pending
-        # (d["Anduril"], "purchase_agreement", "received", today - timedelta(days=20), today - timedelta(days=18), None),
-        # (d["Anduril"], "kyc_id", "received", today - timedelta(days=20), today - timedelta(days=19), None),
-        # (d["Anduril"], "accredited_proof", "received", today - timedelta(days=20), today - timedelta(days=17), None),
-        # (d["Anduril"], "transfer_form", "pending", today - timedelta(days=10), None, "Requested from seller 10 days ago, still outstanding"),
+        # Deal 5: Anduril — transfer form pending
+        (d["Anduril"], "purchase_agreement", "received", today - timedelta(days=20), today - timedelta(days=18), None),
+        (d["Anduril"], "kyc_id", "received", today - timedelta(days=20), today - timedelta(days=19), None),
+        (d["Anduril"], "accredited_proof", "received", today - timedelta(days=20), today - timedelta(days=17), None),
+        (d["Anduril"], "transfer_form", "pending", today - timedelta(days=10), None, "Requested from seller 10 days ago, still outstanding"),
 
-        # # Deal 6: Plaid — expired KYC
-        # (d["Plaid"], "purchase_agreement", "received", today - timedelta(days=30), today - timedelta(days=28), None),
-        # (d["Plaid"], "kyc_id", "expired", today - timedelta(days=400), today - timedelta(days=395), "KYC documents expired — over 12 months old"),
-        # (d["Plaid"], "accredited_proof", "received", today - timedelta(days=30), today - timedelta(days=27), None),
-        # (d["Plaid"], "transfer_form", "received", today - timedelta(days=10), today - timedelta(days=8), None),
+        # Deal 6: Plaid — expired KYC
+        (d["Plaid"], "purchase_agreement", "received", today - timedelta(days=30), today - timedelta(days=28), None),
+        (d["Plaid"], "kyc_id", "expired", today - timedelta(days=400), today - timedelta(days=395), "KYC documents expired — over 12 months old"),
+        (d["Plaid"], "accredited_proof", "received", today - timedelta(days=30), today - timedelta(days=27), None),
+        (d["Plaid"], "transfer_form", "received", today - timedelta(days=10), today - timedelta(days=8), None),
 
-        # # Deal 7: Discord — ROFR waiver received
-        # (d["Discord"], "purchase_agreement", "received", today - timedelta(days=30), today - timedelta(days=28), None),
-        # (d["Discord"], "kyc_id", "received", today - timedelta(days=30), today - timedelta(days=29), None),
-        # (d["Discord"], "accredited_proof", "received", today - timedelta(days=30), today - timedelta(days=27), None),
-        # (d["Discord"], "rofr_waiver", "received", today - timedelta(days=5), today - timedelta(days=1), "Written waiver received from issuer"),
+        # Deal 7: Discord — ROFR waiver received
+        (d["Discord"], "purchase_agreement", "received", today - timedelta(days=30), today - timedelta(days=28), None),
+        (d["Discord"], "kyc_id", "received", today - timedelta(days=30), today - timedelta(days=29), None),
+        (d["Discord"], "accredited_proof", "received", today - timedelta(days=30), today - timedelta(days=27), None),
+        (d["Discord"], "rofr_waiver", "received", today - timedelta(days=5), today - timedelta(days=1), "Written waiver received from issuer"),
 
-        # # Deal 8: Klarna — high value, counsel blocking
-        # (d["Klarna"], "purchase_agreement", "pending", today - timedelta(days=15), None, "Awaiting review from buyer counsel Robert Kim"),
-        # (d["Klarna"], "kyc_id", "received", today - timedelta(days=30), today - timedelta(days=28), None),
-        # (d["Klarna"], "accredited_proof", "received", today - timedelta(days=30), today - timedelta(days=25), None),
-        # (d["Klarna"], "transfer_form", "pending", today - timedelta(days=8), None, None),
+        # Deal 8: Klarna — high value, counsel blocking
+        (d["Klarna"], "purchase_agreement", "pending", today - timedelta(days=15), None, "Awaiting review from buyer counsel Robert Kim"),
+        (d["Klarna"], "kyc_id", "received", today - timedelta(days=30), today - timedelta(days=28), None),
+        (d["Klarna"], "accredited_proof", "received", today - timedelta(days=30), today - timedelta(days=25), None),
+        (d["Klarna"], "transfer_form", "pending", today - timedelta(days=8), None, None),
 
-        # # Deal 9: Cerebras — new inquiry, minimal docs
-        # (d["Cerebras"], "kyc_id", "pending", today, None, "Initial request sent today"),
-        # (d["Cerebras"], "accredited_proof", "pending", today, None, None),
+        # Deal 9: Cerebras — new inquiry, minimal docs
+        (d["Cerebras"], "kyc_id", "pending", today, None, "Initial request sent today"),
+        (d["Cerebras"], "accredited_proof", "pending", today, None, None),
 
-        # # Deal 10: Figma — missing W-8BEN
-        # (d["Figma"], "purchase_agreement", "received", today - timedelta(days=15), today - timedelta(days=13), None),
-        # (d["Figma"], "kyc_id", "received", today - timedelta(days=15), today - timedelta(days=14), None),
-        # (d["Figma"], "accredited_proof", "received", today - timedelta(days=15), today - timedelta(days=12), None),
-        # (d["Figma"], "tax_form", "missing", today - timedelta(days=7), None, "W-8BEN required for international seller, not yet submitted"),
+        # Deal 10: Figma — missing W-8BEN
+        (d["Figma"], "purchase_agreement", "received", today - timedelta(days=15), today - timedelta(days=13), None),
+        (d["Figma"], "kyc_id", "received", today - timedelta(days=15), today - timedelta(days=14), None),
+        (d["Figma"], "accredited_proof", "received", today - timedelta(days=15), today - timedelta(days=12), None),
+        (d["Figma"], "tax_form", "missing", today - timedelta(days=7), None, "W-8BEN required for international seller, not yet submitted"),
 
-        # # Deal 11: Rippling — compliance issues
-        # (d["Rippling"], "purchase_agreement", "draft", today - timedelta(days=4), None, None),
-        # (d["Rippling"], "kyc_id", "pending", today - timedelta(days=4), None, "KYC not yet submitted"),
-        # (d["Rippling"], "accredited_proof", "missing", today - timedelta(days=4), None, "Accredited investor status not submitted"),
+        # Deal 11: Rippling — compliance issues
+        (d["Rippling"], "purchase_agreement", "draft", today - timedelta(days=4), None, None),
+        (d["Rippling"], "kyc_id", "pending", today - timedelta(days=4), None, "KYC not yet submitted"),
+        (d["Rippling"], "accredited_proof", "missing", today - timedelta(days=4), None, "Accredited investor status not submitted"),
 
-        # # Deal 12: Scale AI — everything complete
-        # (d["Scale AI"], "purchase_agreement", "received", today - timedelta(days=30), today - timedelta(days=28), None),
-        # (d["Scale AI"], "kyc_id", "received", today - timedelta(days=30), today - timedelta(days=29), None),
-        # (d["Scale AI"], "accredited_proof", "received", today - timedelta(days=30), today - timedelta(days=27), None),
-        # (d["Scale AI"], "transfer_form", "received", today - timedelta(days=10), today - timedelta(days=8), None),
-        # (d["Scale AI"], "rofr_waiver", "received", today - timedelta(days=20), today - timedelta(days=18), None),
+        # Deal 12: Scale AI — everything complete
+        (d["Scale AI"], "purchase_agreement", "received", today - timedelta(days=30), today - timedelta(days=28), None),
+        (d["Scale AI"], "kyc_id", "received", today - timedelta(days=30), today - timedelta(days=29), None),
+        (d["Scale AI"], "accredited_proof", "received", today - timedelta(days=30), today - timedelta(days=27), None),
+        (d["Scale AI"], "transfer_form", "received", today - timedelta(days=10), today - timedelta(days=8), None),
+        (d["Scale AI"], "rofr_waiver", "received", today - timedelta(days=20), today - timedelta(days=18), None),
 
-        # # Deal 13: Impossible Foods — cold deal
-        # (d["Impossible Foods"], "purchase_agreement", "sent", today - timedelta(days=21), None, "Sent 21 days ago, no response from buyer"),
-        # (d["Impossible Foods"], "kyc_id", "received", today - timedelta(days=30), today - timedelta(days=28), None),
-        # (d["Impossible Foods"], "accredited_proof", "received", today - timedelta(days=30), today - timedelta(days=25), None),
+        # Deal 13: Impossible Foods — cold deal
+        (d["Impossible Foods"], "purchase_agreement", "sent", today - timedelta(days=21), None, "Sent 21 days ago, no response from buyer"),
+        (d["Impossible Foods"], "kyc_id", "received", today - timedelta(days=30), today - timedelta(days=28), None),
+        (d["Impossible Foods"], "accredited_proof", "received", today - timedelta(days=30), today - timedelta(days=25), None),
 
-        # # Deal 14: Reddit — healthy ROFR
-        # (d["Reddit"], "purchase_agreement", "received", today - timedelta(days=20), today - timedelta(days=18), None),
-        # (d["Reddit"], "kyc_id", "received", today - timedelta(days=20), today - timedelta(days=19), None),
-        # (d["Reddit"], "accredited_proof", "received", today - timedelta(days=20), today - timedelta(days=17), None),
-        # (d["Reddit"], "rofr_waiver", "pending", today - timedelta(days=3), None, "ROFR period active — 15 days remaining"),
+        # Deal 14: Reddit — healthy ROFR
+        (d["Reddit"], "purchase_agreement", "received", today - timedelta(days=20), today - timedelta(days=18), None),
+        (d["Reddit"], "kyc_id", "received", today - timedelta(days=20), today - timedelta(days=19), None),
+        (d["Reddit"], "accredited_proof", "received", today - timedelta(days=20), today - timedelta(days=17), None),
+        (d["Reddit"], "rofr_waiver", "pending", today - timedelta(days=3), None, "ROFR period active — 15 days remaining"),
 
-        # # Deal 15: Flexport — rejected purchase agreement
-        # (d["Flexport"], "purchase_agreement", "rejected", today - timedelta(days=7), None, "Rejected by compliance — missing risk disclosure addendum"),
-        # (d["Flexport"], "kyc_id", "received", today - timedelta(days=15), today - timedelta(days=13), None),
-        # (d["Flexport"], "accredited_proof", "received", today - timedelta(days=15), today - timedelta(days=12), None),
-        # (d["Flexport"], "transfer_form", "pending", today - timedelta(days=3), None, None),
+        # Deal 15: Flexport — rejected purchase agreement
+        (d["Flexport"], "purchase_agreement", "rejected", today - timedelta(days=7), None, "Rejected by compliance — missing risk disclosure addendum"),
+        (d["Flexport"], "kyc_id", "received", today - timedelta(days=15), today - timedelta(days=13), None),
+        (d["Flexport"], "accredited_proof", "received", today - timedelta(days=15), today - timedelta(days=12), None),
+        (d["Flexport"], "transfer_form", "pending", today - timedelta(days=3), None, None),
     ]
 
     cur.executemany("""
