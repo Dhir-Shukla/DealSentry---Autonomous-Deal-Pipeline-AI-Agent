@@ -463,11 +463,8 @@ export default function Page() {
               <p className="text-xs text-gray-500 mt-0.5">
                 Click Run Sweep to execute the agentic analysis. DealSentry will scan the deals in the pipeline, flag any concerns such as regulatory issues or approaching deadlines, and propose the next step for your approval. Reset the pipeline after sweeping to restore mock data for a fully fresh test.
               </p>
-              <p className="text-xs text-gray-500 mt-0.5">
-
-              </p>
-              <p className="text-xs text-gray-500 mt-0.5">
-                 *Note: Due to API budget constraints, the agent processes each deal individually to avoid maxing out tokens. Each deal takes south of 1 minute to analyze (~10 minutes total).*
+              <p className="text-xs text-gray-500 mt-4">
+                 Note: Due to API budget constraints, the agent processes each deal individually to avoid maxing out tokens. Each deal takes south of 1 minute to analyze (~10 minutes total).
               </p>
             </div>
           </div>
