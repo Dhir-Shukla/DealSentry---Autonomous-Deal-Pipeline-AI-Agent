@@ -1,2 +1,8 @@
 psycopg2-binary
 python-dotenv
+anthropic
+httpx
+fastapi
+uvicorn
+pydantic
+sse-starlette
