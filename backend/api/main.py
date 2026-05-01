@@ -35,10 +35,37 @@ async def sweep():
     if _sweep_lock.locked():
         return JSONResponse({"error": "Sweep already in progress"}, status_code=409)
 
-    async def event_generator():
+    # The sweep runs as an independent background task so it always reaches
+    # complete_run — even if the SSE client disconnects mid-stream.
+    queue: asyncio.Queue = asyncio.Queue()
+
+    async def background_sweep():
         async with _sweep_lock:
-            async for event in run_sweep():
-                yield {"data": json.dumps(event)}
+            try:
+                async for event in run_sweep():
+                    await queue.put(event)
+            except Exception as e:
+                await queue.put({"type": "error", "error": str(e)})
+            finally:
+                await queue.put(None)  # sentinel: stream is done
+
+    asyncio.create_task(background_sweep())
+
+    async def event_generator():
+        try:
+            while True:
+                try:
+                    # Wait up to 25 s; send a keepalive comment if nothing arrives.
+                    # This prevents Railway / nginx from closing an idle SSE connection.
+                    event = await asyncio.wait_for(queue.get(), timeout=25)
+                    if event is None:   # sentinel — sweep finished, close stream
+                        break
+                    yield {"data": json.dumps(event)}
+                except asyncio.TimeoutError:
+                    yield {"data": json.dumps({"type": "keepalive"})}
+        except asyncio.CancelledError:
+            # Client disconnected — background task continues independently.
+            pass
 
     return EventSourceResponse(event_generator())
 

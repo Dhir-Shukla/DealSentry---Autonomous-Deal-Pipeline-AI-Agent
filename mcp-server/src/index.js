@@ -99,15 +99,15 @@ const TOOL_REGISTRY = [
   {
     name: "update_deal_status",
     description:
-      "Update a deal's pipeline stage and/or risk level assessment. Use for status_update actions (advancing the deal stage) and for recording your risk assessment after analyzing a deal. Risk levels: low, medium, high, critical.",
+      "Update a deal's pipeline stage and/or risk level assessment. Use for status_update actions (advancing the deal stage) and for recording your risk assessment after analyzing a deal. At least one of new_status or risk_level must be provided. Risk levels: low, medium, high, critical.",
     input_schema: {
       type: "object",
       properties: {
         deal_id: { type: "integer", description: "The deal to update" },
-        new_status: { type: "string", description: "New pipeline stage value" },
-        risk_level: { type: "string", description: "Optional risk assessment: low, medium, high, critical" },
+        new_status: { type: "string", description: "New pipeline stage value (optional — omit to keep current stage)" },
+        risk_level: { type: "string", description: "Risk assessment: low, medium, high, critical (optional — omit to keep current risk level)" },
       },
-      required: ["deal_id", "new_status"],
+      required: ["deal_id"],
     },
   },
   {
@@ -238,20 +238,23 @@ async function update_deal_status(env, args) {
   const { deal_id, new_status, risk_level } = args;
 
   if (!deal_id) throw { status: 400, error: "Missing required argument: deal_id" };
-  if (!new_status) throw { status: 400, error: "Missing required argument: new_status" };
+  if (!new_status && !risk_level) throw { status: 400, error: "Must provide at least one of: new_status, risk_level" };
 
   const pool = new Pool({ connectionString: env.DATABASE_URL });
 
-  const { rows } = risk_level
-    ? await pool.query(
-        "UPDATE deals SET stage = $1, risk_level = $2, last_activity_at = NOW() WHERE id = $3 RETURNING *",
-        [new_status, risk_level, deal_id]
-      )
-    : await pool.query(
-        "UPDATE deals SET stage = $1, last_activity_at = NOW() WHERE id = $2 RETURNING *",
-        [new_status, deal_id]
-      );
+  let query, params;
+  if (new_status && risk_level) {
+    query = "UPDATE deals SET stage = $1, risk_level = $2, last_activity_at = NOW() WHERE id = $3 RETURNING *";
+    params = [new_status, risk_level, deal_id];
+  } else if (new_status) {
+    query = "UPDATE deals SET stage = $1, last_activity_at = NOW() WHERE id = $2 RETURNING *";
+    params = [new_status, deal_id];
+  } else {
+    query = "UPDATE deals SET risk_level = $1, last_activity_at = NOW() WHERE id = $2 RETURNING *";
+    params = [risk_level, deal_id];
+  }
 
+  const { rows } = await pool.query(query, params);
   return { deal: rows[0] ?? null };
 }
 

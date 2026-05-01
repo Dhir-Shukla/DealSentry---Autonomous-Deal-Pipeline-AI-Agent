@@ -42,7 +42,9 @@ async def run_sweep():
     """
 
     mcp = McpClient(os.getenv("MCP_SERVER_URL"))
-    client = anthropic.AsyncAnthropic()
+    # 60 s per API call — prevents a single hung request from blocking the sweep.
+    # The per-deal asyncio.wait_for(timeout=180) is the hard outer cap.
+    client = anthropic.AsyncAnthropic(timeout=60.0)
 
     # Step 1: Discover available tools from MCP
     tools = await mcp.list_tools()
