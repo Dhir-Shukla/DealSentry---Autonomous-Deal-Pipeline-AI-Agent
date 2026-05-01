@@ -11,6 +11,131 @@ function json(data, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: CORS_HEADERS });
 }
 
+// --- Tool registry (single source of truth for schemas + discovery) ---
+
+const TOOL_REGISTRY = [
+  {
+    name: "get_deals",
+    description:
+      "Retrieve all active (non-closed) deals in the pipeline with basic info including company name, deal type, stage, total value, risk level, last activity date, assigned rep, ROFR deadline, and buyer/seller names. Use this as the first step to get an overview of deals to analyze.",
+    input_schema: {
+      type: "object",
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "get_deal_details",
+    description:
+      "Get complete details for a specific deal including full buyer counterparty info (KYC status, accredited investor status, last contacted date), full seller counterparty info, and all associated documents with their statuses. Use this to deeply understand a deal's current state.",
+    input_schema: {
+      type: "object",
+      properties: {
+        deal_id: { type: "integer", description: "The ID of the deal to retrieve" },
+      },
+      required: ["deal_id"],
+    },
+  },
+  {
+    name: "get_counterparty_info",
+    description:
+      "Get detailed information about a specific counterparty including their KYC status, accredited investor verification status, last contact date, average response time, and notes. Use this when you need to check a specific person's compliance status or contact history.",
+    input_schema: {
+      type: "object",
+      properties: {
+        party_id: { type: "integer", description: "The ID of the counterparty to retrieve" },
+      },
+      required: ["party_id"],
+    },
+  },
+  {
+    name: "get_document_status",
+    description:
+      "Get all documents associated with a deal and their current statuses (received, pending, missing, expired, rejected). Use this to identify missing or problematic documentation blocking deal progress.",
+    input_schema: {
+      type: "object",
+      properties: {
+        deal_id: { type: "integer", description: "The ID of the deal whose documents to retrieve" },
+      },
+      required: ["deal_id"],
+    },
+  },
+  {
+    name: "get_compliance_rules",
+    description:
+      "Get compliance rules and regulations relevant to private securities transactions. Can filter by category: kyc, accredited_investor, holding_period, communication, rofr. Use this to cite specific regulations when flagging compliance issues.",
+    input_schema: {
+      type: "object",
+      properties: {
+        category: {
+          type: "string",
+          description: "Optional category filter: kyc, accredited_investor, holding_period, communication, rofr",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "create_action",
+    description:
+      "Record a recommended action for a deal. Actions are reviewed by humans before execution. Action types: follow_up (draft outreach email), compliance_flag (flag regulatory issue), escalation (urgent human attention needed), info_request (request specific missing info), status_update (advance deal stage). Every action requires reasoning explaining why it's needed.",
+    input_schema: {
+      type: "object",
+      properties: {
+        run_id: { type: "integer", description: "The current agent run ID" },
+        deal_id: { type: "integer", description: "The deal this action is for" },
+        action_type: {
+          type: "string",
+          description: "One of: follow_up, compliance_flag, escalation, info_request, status_update",
+        },
+        priority: { type: "string", description: "One of: low, medium, high, critical" },
+        reasoning: { type: "string", description: "Explanation of why this action is needed" },
+        content: { type: "string", description: "The action content, e.g. a drafted email or specific instruction" },
+        target_recipient: { type: "string", description: "Who the action is directed at, e.g. buyer name or rep name" },
+      },
+      required: ["run_id", "deal_id", "action_type", "priority", "reasoning"],
+    },
+  },
+  {
+    name: "update_deal_status",
+    description:
+      "Update a deal's pipeline stage and/or risk level assessment. Use for status_update actions (advancing the deal stage) and for recording your risk assessment after analyzing a deal. Risk levels: low, medium, high, critical.",
+    input_schema: {
+      type: "object",
+      properties: {
+        deal_id: { type: "integer", description: "The deal to update" },
+        new_status: { type: "string", description: "New pipeline stage value" },
+        risk_level: { type: "string", description: "Optional risk assessment: low, medium, high, critical" },
+      },
+      required: ["deal_id", "new_status"],
+    },
+  },
+  {
+    name: "create_run",
+    description:
+      "Create a new agent sweep run record. Call this once at the start of a pipeline sweep before analyzing any deals. Returns the run_id to use when creating actions.",
+    input_schema: {
+      type: "object",
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "complete_run",
+    description:
+      "Mark an agent sweep run as completed with summary statistics. Call this once after all deals have been analyzed.",
+    input_schema: {
+      type: "object",
+      properties: {
+        run_id: { type: "integer", description: "The run ID to complete" },
+        deals_analyzed: { type: "integer", description: "Total number of deals analyzed" },
+        actions_created: { type: "integer", description: "Total number of actions created" },
+      },
+      required: ["run_id", "deals_analyzed", "actions_created"],
+    },
+  },
+];
+
 // --- Tool handlers ---
 
 async function get_deals(env, _args) {
@@ -130,9 +255,35 @@ async function update_deal_status(env, args) {
   return { deal: rows[0] ?? null };
 }
 
+async function create_run(env, _args) {
+  const pool = new Pool({ connectionString: env.DATABASE_URL });
+  const { rows } = await pool.query(
+    "INSERT INTO agent_runs (started_at, status) VALUES (NOW(), 'running') RETURNING *"
+  );
+  return { run: rows[0] };
+}
+
+async function complete_run(env, args) {
+  const { run_id, deals_analyzed, actions_created } = args;
+
+  if (!run_id) throw { status: 400, error: "Missing required argument: run_id" };
+  if (deals_analyzed == null) throw { status: 400, error: "Missing required argument: deals_analyzed" };
+  if (actions_created == null) throw { status: 400, error: "Missing required argument: actions_created" };
+
+  const pool = new Pool({ connectionString: env.DATABASE_URL });
+  const { rows } = await pool.query(
+    `UPDATE agent_runs
+     SET completed_at = NOW(), deals_analyzed = $1, actions_created = $2, status = 'completed'
+     WHERE id = $3
+     RETURNING *`,
+    [deals_analyzed, actions_created, run_id]
+  );
+  return { run: rows[0] ?? null };
+}
+
 // --- Router ---
 
-const TOOLS = {
+const HANDLERS = {
   get_deals,
   get_deal_details,
   get_counterparty_info,
@@ -140,6 +291,8 @@ const TOOLS = {
   get_compliance_rules,
   create_action,
   update_deal_status,
+  create_run,
+  complete_run,
 };
 
 export default {
@@ -161,7 +314,11 @@ export default {
 
     const { tool, arguments: args } = body;
 
-    const handler = TOOLS[tool];
+    if (tool === "list_tools") {
+      return json({ tools: TOOL_REGISTRY });
+    }
+
+    const handler = HANDLERS[tool];
     if (!handler) {
       return json({ error: `Unknown tool: ${tool}` }, 400);
     }
