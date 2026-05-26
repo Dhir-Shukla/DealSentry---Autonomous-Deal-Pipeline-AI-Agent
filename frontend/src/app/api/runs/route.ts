@@ -1,6 +1,8 @@
 import { Pool } from "@neondatabase/serverless"
 import { NextResponse } from "next/server"
 
+export const dynamic = "force-dynamic"
+
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
 
 export async function GET() {
